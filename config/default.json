@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://farid:blog_ordibehesht@blog-2022.o12ei.mongodb.net/blogDB?authSource=admin&replicaSet=atlas-9jaafk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",
+  "jwtSecret": "secret"
+}
