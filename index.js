@@ -9,6 +9,7 @@ const registerRouter = require("./routes/registerRouter");
 const loginRouter = require("./routes/loginRouter");
 const blogRouter = require("./routes/blogRouter");
 const adminRouter = require("./routes/adminRouter");
+const userRouter = require("./routes/userRouter");
 
 //ERROR CLASS AND HANDLER
 const AppError = require("./utils/appError");
@@ -46,6 +47,9 @@ app.use("/s", (req, res) => {
 //AUTHENTICATION
 app.use("/api/v1/register", registerRouter);
 app.use("/api/v1/login", loginRouter);
+
+//USERS ROUTES
+app.use("/api/v1/users", userRouter);
 
 //PRODUCTS
 app.use("/api/v1/products", productRouter);

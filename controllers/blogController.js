@@ -30,11 +30,13 @@ exports.getAllBlogs = catchAsync(async (req, res, next) => {
     query = query.select(fields);
   }
 
-  const data = await query.populate("user");
+  const data = await query
+    // .populate("newItems");
+    .populate({ path: "user", select: "name -_id" });
   if (data.length === 0) {
     return next(new AppError("no data found", 204));
   }
-  res.status(200).json(data);
+  res.status(200).json({ dataLength: data.length, data });
 });
 exports.deleteAllBlogs = async (req, res) => {
   try {

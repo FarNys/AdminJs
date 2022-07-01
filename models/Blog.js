@@ -37,7 +37,13 @@ const BlogSchema = mongoose.Schema(
 );
 
 // BlogSchema.virtual("divideByTwo").get(function () {
-//   return this.point / 2;
+//   return this.point * 100;
+// });
+// BlogSchema.virtual("newItems", {
+//   ref: "users",
+//   localField: "_id",
+//   foreignField: "title",
+//   justOne: false,
 // });
 
 module.exports = mongoose.model("blogs", BlogSchema);
