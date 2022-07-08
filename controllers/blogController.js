@@ -26,8 +26,36 @@ exports.getAllBlogs = catchAsync(async (req, res, next) => {
   // THEN ADD SELECT METHOD TO JUST RETURN THAT FIELD
   if (req.query.selected) {
     const fields = req.query.selected.split(",").join(" ");
-    console.log(fields);
     query = query.select(fields);
+  }
+
+  //ADD SORT IF EXIST
+  if (req.query.sort) {
+    const fields = req.query.sort.split(",").join(" ");
+    query = query.sort(fields);
+  }
+
+  //ADD PAGINATION
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await Blog.countDocuments();
+
+  query = query.skip(startIndex).limit(limit);
+
+  const pagination = {};
+  if (endIndex < total) {
+    pagination.next = {
+      nextPage: page + 1,
+      limit,
+    };
+  }
+  if (startIndex > 0) {
+    pagination.prev = {
+      prevPage: page - 1,
+      limit,
+    };
   }
 
   const data = await query
@@ -36,7 +64,7 @@ exports.getAllBlogs = catchAsync(async (req, res, next) => {
   if (data.length === 0) {
     return next(new AppError("no data found", 204));
   }
-  res.status(200).json({ dataLength: data.length, data });
+  res.status(200).json({ total, dataLength: data.length, pagination, data });
 });
 exports.deleteAllBlogs = async (req, res) => {
   try {
