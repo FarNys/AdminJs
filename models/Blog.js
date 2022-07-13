@@ -29,21 +29,21 @@ const BlogSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
-  // {
-  //   toJSON: { virtuals: true },
-  //   toObject: { virtuals: true },
-  // }
 );
 
+BlogSchema.virtual("reviews", {
+  ref: "reviews",
+  localField: "_id",
+  foreignField: "blog",
+  justOne: false,
+});
 // BlogSchema.virtual("divideByTwo").get(function () {
 //   return this.point * 100;
-// });
-// BlogSchema.virtual("newItems", {
-//   ref: "users",
-//   localField: "_id",
-//   foreignField: "title",
-//   justOne: false,
 // });
 
 module.exports = mongoose.model("blogs", BlogSchema);

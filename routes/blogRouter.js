@@ -7,10 +7,10 @@ router
   .route("/")
   .get(blogController.getAllBlogs)
   .post(authMW, blogController.createBlog)
-  .delete(blogController.deleteAllBlogs);
+  .delete(authMW, blogController.deleteAllBlogs);
 //   .post(productController.saveProducts);
 router.route("/unwind").get(blogController.unwindBlog);
 router.route("/stats").get(blogController.aggregateBlog);
-router.route("/:id").get(authMW, blogController.getSingleBlog);
+router.route("/:id").get(blogController.getSingleBlog);
 
 module.exports = router;

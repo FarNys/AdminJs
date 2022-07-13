@@ -165,7 +165,13 @@ exports.getSingleBlog = catchAsync(async (req, res, next) => {
   // if (id.length !== 24) {
   //   next(new AppError("cannot find blog with this id", 404));
   // }
-  const blog = await Blog.findById(id).select("-_id -__v");
+  const blog = await Blog.findById(id)
+    .select("-__v")
+    .populate({
+      path: "reviews",
+      populate: { path: "user", select: "name email" },
+    });
+
   if (!blog) {
     return next(new AppError("cannot find blog with this id", 404));
   }

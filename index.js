@@ -8,6 +8,7 @@ const searchRouter = require("./routes/searchRouter");
 const registerRouter = require("./routes/registerRouter");
 const loginRouter = require("./routes/loginRouter");
 const blogRouter = require("./routes/blogRouter");
+const reviewRouter = require("./routes/reviewRouter");
 const adminRouter = require("./routes/adminRouter");
 const userRouter = require("./routes/userRouter");
 
@@ -57,6 +58,9 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/product/search", searchRouter);
 //BLOG ROUTERS
 app.use("/api/v1/blogs", blogRouter);
+
+//REVIEW ROUTERS
+app.use("/api/v1/blog/review", reviewRouter);
 
 //ADMIN ROUTER
 app.use("/admin", adminRouter);
