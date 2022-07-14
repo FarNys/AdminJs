@@ -82,6 +82,7 @@ exports.createBlog = catchAsync(async (req, res, next) => {
 
   const newBlog = new Blog({
     user: req.user.id,
+    categories: req.body.categories,
     title,
     desc,
     point,
@@ -170,6 +171,10 @@ exports.getSingleBlog = catchAsync(async (req, res, next) => {
     .populate({
       path: "reviews",
       populate: { path: "user", select: "name email" },
+    })
+    .populate({
+      path: "categories",
+      select: "title",
     });
 
   if (!blog) {

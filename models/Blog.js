@@ -6,6 +6,12 @@ const BlogSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+    categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "categories",
+      },
+    ],
     title: {
       type: String,
       required: true,

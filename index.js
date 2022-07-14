@@ -11,6 +11,7 @@ const blogRouter = require("./routes/blogRouter");
 const reviewRouter = require("./routes/reviewRouter");
 const adminRouter = require("./routes/adminRouter");
 const userRouter = require("./routes/userRouter");
+const categoryRouter = require("./routes/categoryRouter");
 
 //ERROR CLASS AND HANDLER
 const AppError = require("./utils/appError");
@@ -58,6 +59,9 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/product/search", searchRouter);
 //BLOG ROUTERS
 app.use("/api/v1/blogs", blogRouter);
+
+//CATEGORY ROUTERS
+app.use("/api/v1/categories", categoryRouter);
 
 //REVIEW ROUTERS
 app.use("/api/v1/blog/review", reviewRouter);
