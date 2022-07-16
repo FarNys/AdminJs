@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Review = require("./../models/Review");
 const Blog = require("./../models/Blog");
+const { find } = require("./../models/Blog");
 
 exports.createReview = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -10,8 +11,15 @@ exports.createReview = catchAsync(async (req, res, next) => {
   console.log(userId, blogId);
   const getBlog = await Blog.findById(blogId);
 
+  //CHECK IF BLOG WITH THIS ID EXIST!
   if (!getBlog) {
     return next(new AppError(`No Blog With id=${blogId}`, 404));
+  }
+
+  //CHECK IF THE USER SEND REVIEW FOR THIS BLOG BEFORE OR NOT!
+  const checkReview = await Review.find({ blog: blogId, user: userId });
+  if (checkReview.length > 0) {
+    return next(new AppError("You preview this blog", 400));
   }
 
   const review = await new Review({
@@ -41,4 +49,17 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   res.status(200).json({
     data: allRev,
   });
+});
+
+//DELETE SINGLE REVIEW
+exports.deleteSingleReview = catchAsync(async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+
+  const findReview = await Review.find({ _id: reviewId });
+  if (findReview.length === 0) {
+    return next(new AppError(`No review with this id=${reviewId} exists`, 404));
+  }
+
+  await Review.deleteOne({ _id: reviewId });
+  res.status(200).json({ msg: "deleted" });
 });

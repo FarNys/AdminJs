@@ -7,7 +7,8 @@ router
   .route("/:blogId")
   //   .get(reviewController.getAllBlogs)
   .post(authMW, reviewController.createReview);
-//   .delete(blogController.deleteAllBlogs);
+
+router.route("/:reviewId").delete(authMW, reviewController.deleteSingleReview);
 
 router.route("/").get(reviewController.getAllReviews);
 module.exports = router;

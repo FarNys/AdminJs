@@ -48,8 +48,5 @@ BlogSchema.virtual("reviews", {
   foreignField: "blog",
   justOne: false,
 });
-// BlogSchema.virtual("divideByTwo").get(function () {
-//   return this.point * 100;
-// });
 
 module.exports = mongoose.model("blogs", BlogSchema);

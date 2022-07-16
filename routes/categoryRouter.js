@@ -7,4 +7,9 @@ router
   .route("/")
   .post(categoryController.createCategory)
   .get(categoryController.getAllCategories);
+
+router
+  .route("/:categoryId")
+  .delete(authMW, categoryController.deleteSingleCategory);
+
 module.exports = router;

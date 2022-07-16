@@ -2,15 +2,16 @@ const mongoose = require("mongoose");
 
 const ReviewSchema = mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: "users",
   },
   blog: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: "blogs",
   },
   desc: {
     type: String,
+    unique: true,
   },
   createdAt: {
     type: Date,
@@ -21,5 +22,13 @@ const ReviewSchema = mongoose.Schema({
     default: Date.now,
   },
 });
+
+// ReviewSchema.index(
+//   {
+//     user: 1,
+//     blog: 1,
+//   },
+//   { unique: true, dropDups: true }
+// );
 
 module.exports = mongoose.model("reviews", ReviewSchema);

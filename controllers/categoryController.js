@@ -26,3 +26,15 @@ exports.getAllCategories = catchAsync(async (req, res, next) => {
     data: allCats,
   });
 });
+
+exports.deleteSingleCategory = catchAsync(async (req, res, next) => {
+  const categoryId = req.params.categoryId;
+  const findCategory = await Category.find({ _id: categoryId });
+  if (findCategory.length === 0) {
+    return next(new AppError(`no category with id=${categoryId} exists`, 404));
+  }
+  await Category.deleteOne({ _id: categoryId });
+  res.status(200).json({
+    msg: "deleteD",
+  });
+});
