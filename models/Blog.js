@@ -24,6 +24,9 @@ const BlogSchema = mongoose.Schema(
       type: Number,
       default: 4,
     },
+    averageScore: {
+      type: Number,
+    },
     list: {
       type: Array,
     },

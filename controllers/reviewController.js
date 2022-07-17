@@ -19,13 +19,14 @@ exports.createReview = catchAsync(async (req, res, next) => {
   //CHECK IF THE USER SEND REVIEW FOR THIS BLOG BEFORE OR NOT!
   const checkReview = await Review.find({ blog: blogId, user: userId });
   if (checkReview.length > 0) {
-    return next(new AppError("You preview this blog", 400));
+    return next(new AppError("You review this blog 1-time", 400));
   }
 
   const review = await new Review({
     user: userId,
     blog: blogId,
     desc: req.body.desc,
+    score: req.body.score,
   });
   await review.save();
   // const x = await User.findById({ id: req.user });
@@ -43,7 +44,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
       path: "blog",
       select: "title",
     });
-  if (!allRev) {
+  if (allRev.length === 0) {
     return next(new AppError("no reviews found", 404));
   }
   res.status(200).json({
@@ -62,4 +63,10 @@ exports.deleteSingleReview = catchAsync(async (req, res, next) => {
 
   await Review.deleteOne({ _id: reviewId });
   res.status(200).json({ msg: "deleted" });
+});
+
+//DELETE ALL REVIEWS
+exports.deleteAllReviews = catchAsync(async (req, res, next) => {
+  await Review.deleteMany({});
+  res.status(200).json({ msg: "All Review Deleted" });
 });

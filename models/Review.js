@@ -11,7 +11,10 @@ const ReviewSchema = mongoose.Schema({
   },
   desc: {
     type: String,
-    unique: true,
+  },
+  score: {
+    type: Number,
+    require: true,
   },
   createdAt: {
     type: Date,
@@ -30,5 +33,36 @@ const ReviewSchema = mongoose.Schema({
 //   },
 //   { unique: true, dropDups: true }
 // );
+ReviewSchema.statics.getAverageScore = async function (blogId) {
+  const obj = await this.aggregate([
+    {
+      $match: { blog: blogId },
+    },
+    {
+      $group: {
+        _id: "$blog",
+        averageScore: { $avg: "$score" },
+      },
+    },
+  ]);
+  console.log(obj);
+  try {
+    await this.model("blogs").findByIdAndUpdate(blogId, {
+      averageScore: obj[0].averageScore,
+    });
+    const x = await this.model("reviews").find({ blog: blogId });
+    console.log(x);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+ReviewSchema.post("save", function () {
+  this.constructor.getAverageScore(this.blog);
+});
+
+ReviewSchema.pre("remove", function () {
+  this.constructor.getAverageScore(this.blog);
+});
 
 module.exports = mongoose.model("reviews", ReviewSchema);

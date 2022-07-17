@@ -135,8 +135,8 @@ exports.aggregateBlog = async (req, res) => {
       },
       {
         $group: {
-          // _id: "$title",
-          _id: null,
+          _id: "$title",
+          // _id: null,
           averagePoint: { $avg: "$point" },
           length: { $sum: 1 },
           summAll: { $sum: "$point" },

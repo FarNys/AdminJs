@@ -10,5 +10,8 @@ router
 
 router.route("/:reviewId").delete(authMW, reviewController.deleteSingleReview);
 
-router.route("/").get(reviewController.getAllReviews);
+router
+  .route("/")
+  .get(reviewController.getAllReviews)
+  .delete(authMW, reviewController.deleteAllReviews);
 module.exports = router;
