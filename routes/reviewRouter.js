@@ -8,7 +8,10 @@ router
   //   .get(reviewController.getAllBlogs)
   .post(authMW, reviewController.createReview);
 
-router.route("/:reviewId").delete(authMW, reviewController.deleteSingleReview);
+router
+  .route("/:reviewId")
+  .get(reviewController.getSingleReview)
+  .delete(authMW, reviewController.deleteSingleReview);
 
 router
   .route("/")

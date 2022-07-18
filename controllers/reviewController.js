@@ -3,7 +3,6 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Review = require("./../models/Review");
 const Blog = require("./../models/Blog");
-const { find } = require("./../models/Blog");
 
 exports.createReview = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -48,7 +47,21 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
     return next(new AppError("no reviews found", 404));
   }
   res.status(200).json({
+    dataLength: allRev.length,
     data: allRev,
+  });
+});
+
+//GET SINGLE REVIEW
+exports.getSingleReview = catchAsync(async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+  const getReview = await Review.find({ _id: reviewId });
+  if (getReview.length === 0) {
+    return next(new AppError(`review with id = ${reviewId} not exist`, 404));
+  }
+  res.status(200).json({
+    msg: "Successful",
+    data: getReview[0],
   });
 });
 

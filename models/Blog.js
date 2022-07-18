@@ -45,6 +45,11 @@ const BlogSchema = mongoose.Schema(
   }
 );
 
+BlogSchema.pre("remove", async function (next) {
+  await this.model("reviews").deleteMany({ blog: this._id });
+  next();
+});
+
 BlogSchema.virtual("reviews", {
   ref: "reviews",
   localField: "_id",

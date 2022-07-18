@@ -11,6 +11,9 @@ router
 //   .post(productController.saveProducts);
 router.route("/unwind").get(blogController.unwindBlog);
 router.route("/stats").get(blogController.aggregateBlog);
-router.route("/:id").get(blogController.getSingleBlog);
+router
+  .route("/:id")
+  .get(blogController.getSingleBlog)
+  .delete(authMW, blogController.deleteSingleBlog);
 
 module.exports = router;

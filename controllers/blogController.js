@@ -182,3 +182,15 @@ exports.getSingleBlog = catchAsync(async (req, res, next) => {
   }
   res.status(200).json(blog);
 });
+
+exports.deleteSingleBlog = catchAsync(async (req, res, next) => {
+  const blogId = req.params.id;
+  const getBlog = await Blog.findById(blogId);
+  if (getBlog.length === 0) {
+    return next(new AppError(`Blog with id=${blogId} not exist`, 404));
+  }
+  getBlog.remove();
+  res.status(200).json({
+    msg: "successfully Deleted",
+  });
+});
