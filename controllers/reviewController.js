@@ -34,22 +34,26 @@ exports.createReview = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const allRev = await Review.find({})
-    .populate({
-      path: "user",
-      select: "name email",
-    })
-    .populate({
-      path: "blog",
-      select: "title",
-    });
-  if (allRev.length === 0) {
-    return next(new AppError("no reviews found", 404));
+  // const allRev = await Review.find({})
+  //   .populate({
+  //     path: "user",
+  //     select: "name email",
+  //   })
+  //   .populate({
+  //     path: "blog",
+  //     select: "title",
+  //   });
+  // if (allRev.length === 0) {
+  //   return next(new AppError("no reviews found", 404));
+  // }
+  // res.status(200).json({
+  //   dataLength: allRev.length,
+  //   data: allRev,
+  // });
+  if (res.advancedResults.dataLength === 0) {
+    return next(new AppError("no data found", 204));
   }
-  res.status(200).json({
-    dataLength: allRev.length,
-    data: allRev,
-  });
+  res.status(200).json({ data: res.advancedResults });
 });
 
 //GET SINGLE REVIEW

@@ -3,68 +3,10 @@ const catchAsync = require("../utils/catchAsync");
 const Blog = require("./../models/Blog");
 
 exports.getAllBlogs = catchAsync(async (req, res, next) => {
-  let query;
-
-  //CREATE A CLONE FROM SENT QUERY
-  const reqQuery = { ...req.query };
-
-  //WE CAN DEFINE EXCLUDE LIST TO PREVENT IT FROM SEARCHING!
-  let excludeList = ["title"];
-  excludeList.forEach((el) => delete reqQuery[el]);
-
-  //RE BUILD SENT QUERY FOR CHANGING gte & ... to $gte & ...
-  let queryStr = JSON.stringify(reqQuery);
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`
-  );
-
-  //CHANGE BACK TO DEFAULT JSON FILE
-  query = Blog.find(JSON.parse(queryStr));
-
-  //CHECK IF THERE IS A (SELECTED} FIELD TO SHOW
-  // THEN ADD SELECT METHOD TO JUST RETURN THAT FIELD
-  if (req.query.selected) {
-    const fields = req.query.selected.split(",").join(" ");
-    query = query.select(fields);
-  }
-
-  //ADD SORT IF EXIST
-  if (req.query.sort) {
-    const fields = req.query.sort.split(",").join(" ");
-    query = query.sort(fields);
-  }
-
-  //ADD PAGINATION
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 5;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  const total = await Blog.countDocuments();
-
-  query = query.skip(startIndex).limit(limit);
-
-  const pagination = {};
-  if (endIndex < total) {
-    pagination.next = {
-      nextPage: page + 1,
-      limit,
-    };
-  }
-  if (startIndex > 0) {
-    pagination.prev = {
-      prevPage: page - 1,
-      limit,
-    };
-  }
-
-  const data = await query
-    // .populate("newItems");
-    .populate({ path: "user", select: "name -_id" });
-  if (data.length === 0) {
+  if (res.advancedResults.dataLength === 0) {
     return next(new AppError("no data found", 204));
   }
-  res.status(200).json({ total, dataLength: data.length, pagination, data });
+  res.status(200).json({ data: res.advancedResults });
 });
 exports.deleteAllBlogs = async (req, res) => {
   try {

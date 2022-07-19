@@ -1,11 +1,20 @@
 const express = require("express");
 const blogController = require("../controllers/blogController");
 const authMW = require("../middleware/authMW");
+const advancedResults = require("../middleware/advancedResults");
+const Blog = require("../models/Blog");
+
 const router = express.Router();
 
 router
   .route("/")
-  .get(blogController.getAllBlogs)
+  .get(
+    advancedResults(Blog, "", [
+      { path: "user", select: "name -_id" },
+      { path: "categories", select: "title" },
+    ]),
+    blogController.getAllBlogs
+  )
   .post(authMW, blogController.createBlog)
   .delete(authMW, blogController.deleteAllBlogs);
 //   .post(productController.saveProducts);
