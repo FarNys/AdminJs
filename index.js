@@ -1,8 +1,10 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const fileupload = require("express-fileupload");
 const productRouter = require("./routes/productRouter");
 const searchRouter = require("./routes/searchRouter");
 const registerRouter = require("./routes/registerRouter");
@@ -30,6 +32,11 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+//FILE UPLOADING MIDDLEWARE
+app.use(fileupload());
+
+//ADD PATH FOR STATIC UPLOAD IMAGES
+app.use(express.static(path.join(__dirname, "public")));
 const router = express.Router();
 const PORT = 3456;
 

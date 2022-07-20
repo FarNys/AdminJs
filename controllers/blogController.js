@@ -1,3 +1,4 @@
+const path = require("path");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Blog = require("./../models/Blog");
@@ -135,4 +136,42 @@ exports.deleteSingleBlog = catchAsync(async (req, res, next) => {
   res.status(200).json({
     msg: "successfully Deleted",
   });
+});
+
+exports.blogUploadPhoto = catchAsync(async (req, res, next) => {
+  const blog = await Blog.findById(req.params.id);
+  if (!blog) {
+    return next(new AppError(`No blog with id=${req.params.id} found`, 404));
+  }
+  console.log(req.files);
+
+  if (!req.files) {
+    return next(new AppError("Please Upload a File", 400));
+  }
+  const file = req.files.file;
+  if (!file.mimetype.startsWith("image")) {
+    return next(new AppError("Please Upload a valid Image", 400));
+  }
+
+  if (file.size > process.env.MAX_UPLOAD_SIZE) {
+    return next(
+      new AppError(`Your Image size is too big (need less than ${1} MB)`, 400)
+    );
+  }
+
+  file.name = `photo_${blog._id}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+    if (err) {
+      console.log(err);
+      new AppError(`Problem with uploading image)`, 500);
+    }
+    await Blog.findByIdAndUpdate(req.params.id, { photo: file.name });
+    res.status(200).json({
+      success: true,
+      data: file.name,
+    });
+  });
+
+  console.log(file.name);
 });

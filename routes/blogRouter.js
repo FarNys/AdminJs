@@ -25,4 +25,6 @@ router
   .get(blogController.getSingleBlog)
   .delete(authMW, blogController.deleteSingleBlog);
 
+router.route("/:id/photo").put(blogController.blogUploadPhoto);
+
 module.exports = router;

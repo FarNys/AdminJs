@@ -30,6 +30,9 @@ const BlogSchema = mongoose.Schema(
     list: {
       type: Array,
     },
+    photo: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
