@@ -5,6 +5,9 @@ const advancedResults = require("../middleware/advancedResults");
 
 const router = express.Router({ mergeParams: true });
 
-router.route("/").post(authMW, photoController.CreatePhoto);
+router
+  .route("/")
+  .post(authMW, photoController.CreatePhoto)
+  .get(photoController.getAllPhotos);
 
 module.exports = router;

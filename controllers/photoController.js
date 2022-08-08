@@ -36,16 +36,28 @@ exports.CreatePhoto = catchAsync(async (req, res, next) => {
       console.log(err);
       new AppError(`Problem with uploading image)`, 500);
     }
-    const photo = new Photo({
+    const newPhoto = new Photo({
       title: req.body.title,
       url: file.name,
     });
-    await photo.save();
+    await newPhoto.save();
     res.status(200).json({
       success: true,
-      data: file.name,
+      data: newPhoto,
     });
   });
 
   //   console.log(file.name);
+});
+
+exports.getAllPhotos = catchAsync(async (req, res, next) => {
+  const photos = await Photo.find({});
+  if (photos.length === 0) {
+    return next(new AppError("no photo found", 404));
+  }
+  res.status(200).json({
+    msg: "Success",
+    dataLength: photos.length,
+    data: photos,
+  });
 });
